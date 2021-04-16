@@ -2,6 +2,7 @@
 namespace DreamFactory\Core\Components;
 
 use DreamFactory\Core\Contracts\DbSchemaInterface;
+use DreamFactory\Core\Exceptions\InternalServerErrorException;
 use Illuminate\Database\ConnectionInterface;
 
 /**
@@ -61,6 +62,8 @@ class DbSchemaExtensions
     {
         if (isset($this->extensions[$name])) {
             return call_user_func($this->extensions[$name], $conn);
+        } else if (!isset($this->extensions[$name]) && $name === 'sqlsrv') {
+            throw new InternalServerErrorException('SQL Server support is only available in DreamFactory\'s commercial version. Please visit www.dreamfactory.com to schedule a call with our sales team');
         }
 
         return null;
